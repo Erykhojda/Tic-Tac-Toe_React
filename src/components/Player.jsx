@@ -1,25 +1,30 @@
 import { useState } from 'react'
 
-export default function Player({ name, symbol }) {
-
+export default function Player({ initialName, symbol }) {
+    const [playerName, setPlayerName] = useState(initialName)
     const [isEditing, setIsEditing] = useState(false)
 
     function handleEditClick(e) {
-        setIsEditing(true)
+        setIsEditing((editing) => !editing) //the best practise solution to add funtcion to set opposite value
+        // setIsEditing(!isEditing)  is working but not good practise
     }
 
-    let playerName = <span className="player-name">{name}</span>
+    function handlechange(e) {
+        setPlayerName(e.target.value)
+    }
+
+    let editablePlayerName = <span className="player-name">{playerName}</span>
 
     if (isEditing) {
-        playerName = <input type='text' required></input>
+        editablePlayerName = <input type='text' value={playerName} onChange={handlechange} required></input>
     }
     return (
         <li>
             <span className="player">
-                {playerName}
+                {editablePlayerName}
                 <span className="player-symbol">{symbol}</span>
             </span>
-            <button onClick={handleEditClick}>Edit</button>
+            <button onClick={handleEditClick}>{isEditing ? 'Save' : 'Edit'}</button>
         </li>
     )
 }
